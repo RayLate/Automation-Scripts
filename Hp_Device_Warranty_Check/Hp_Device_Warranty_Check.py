@@ -31,16 +31,26 @@ snlist = x1[x1.SerialNum.str.len() == 10]
 #Serial Number Series
 SN = snlist['SerialNum']
 
+print("Number of Hostname to check = {}".format(SN.size))
+
 warranty =[]
 
 # open chrome browser and navigate to web page.
 driver = webdriver.Chrome()
 
 for serialnumber in SN:
+	print("Hostname Remaining = {}".format(SN.size-len(warranty)))
+
     driver.get("https://support.hp.com/sg-en/checkwarranty")
 
-    # Find SN input field
-    SNfield = driver.find_element_by_xpath("//input[@id='wFormSerialNumber']")
+    # Find SN input field, if fail reopen chrome brower and try again
+    try:
+        SNfield = driver.find_element_by_xpath("//input[@id='wFormSerialNumber']")
+    except expression as identifier:
+        driver.close()
+        driver = webdriver.Chrome()
+        SNfield = driver.find_element_by_xpath("//input[@id='wFormSerialNumber']")
+
     SNfield.clear()
     SNfield.send_keys(serialnumber)
     checkwarranty = driver.find_element_by_xpath("//*[@id='btnWFormSubmit']")
