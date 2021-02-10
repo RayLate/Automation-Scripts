@@ -3,6 +3,10 @@ import pandas as pd
 import os
 from pandas import DataFrame, Series
 from datetime import datetime
+import time
+
+print("Starting Send Email Script")
+time.sleep(5)
 
 def mailSend(df):
     outlook = win32.Dispatch('Outlook.application')
@@ -18,8 +22,7 @@ def mailSend(df):
         mail.CC = "siewkian@micron.com;rming@micron.com;f10itmobile@micron.com;"
 
     if singtelACCNumDict[group][1] == "MSB":
-        mail.To = "rming@micron.com"
-        #mail.To = "tanlihock@micron.com;suhaimi@micron.com"
+        mail.To = "tanlihock@micron.com;suhaimi@micron.com"
 
 
 
