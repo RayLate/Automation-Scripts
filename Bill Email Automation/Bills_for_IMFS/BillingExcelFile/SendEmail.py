@@ -13,6 +13,7 @@ def mailSend(df):
     mail = outlook.CreateItem(0)
 
     if singtelACCNumDict[group][1] == "IMFS":
+        #mail.To = "dingmingray@gmail.com"
         mail.To = "munwei@micron.com;michaelwong@micron.com;"
         mail.CC = "f10itmobile@micron.com;rming@micron.com"
 
@@ -23,6 +24,7 @@ def mailSend(df):
 
     if singtelACCNumDict[group][1] == "MSB":
         mail.To = "tanlihock@micron.com;suhaimi@micron.com"
+        mail.CC = "rming@micron.com;"
 
 
 
@@ -72,7 +74,11 @@ path = os.path.dirname(os.path.abspath(__file__))
 group = path.split('\\')[-2].split('_')[-1]
 
 # Read Excel
-df = pd.read_excel(f'{path}\VIP&DUTY&COMMON.xlsx',sheet_name=(-2))
+try:
+    df = pd.read_excel(f'{path}\VIP&DUTY&COMMON.xlsx',sheet_name=(-2))
+except Exception as error:
+    print(error)
+    input("Please Close")
 
 # DataFrame
 billdf = df[df['Bill Amount to be deducted'] > 0].copy()
