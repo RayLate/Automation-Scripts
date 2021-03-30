@@ -26,7 +26,7 @@ path = " " # location of the excel file containing device serial numbers
 x1 = pd.read_excel(path)
 
 # HP device serial number is 10 letters, remove serial number that is not 10 letters
-snlist = x1[x1.SerialNum.str.len() == 10] 
+snlist = x1[x1.SerialNum.str.len() == 10]
 
 #Serial Number Series
 SN = snlist['SerialNum']
@@ -40,7 +40,6 @@ driver = webdriver.Chrome()
 
 for serialnumber in SN:
 	print("Hostname Remaining = {}".format(SN.size-len(warranty)))
-
     driver.get("https://support.hp.com/sg-en/checkwarranty")
 
     # Find SN input field, if fail reopen chrome brower and try again
@@ -61,35 +60,35 @@ for serialnumber in SN:
     try:
         # Base Warranty Start Date
         startdate = driver.find_element_by_xpath(
-            "//*[@id='warrantyResultBase']/div/div[1]/div[1]/div[4]/div[2]")      
+            "//*[@id='warrantyResultBase']/div/div[1]/div[1]/div[4]/div[2]")
 
         # Extended Warranty Start Date
         if not bool(startdate.text):
             startdate = driver.find_element_by_xpath(
-                "//*[@id='additionalExtWarranty_1']/div/div/div[1]/div[4]/div[2]")            
+                "//*[@id='additionalExtWarranty_1']/div/div/div[1]/div[4]/div[2]")
         startdate = startdate.text
     except:
-        startdate = 'error' 
+        startdate = 'error'
     try:
         # Base Warranty End Date
         enddate = driver.find_element_by_xpath(
-            "//*[@id='warrantyResultBase']/div/div[1]/div[1]/div[5]/div[2]")  
+            "//*[@id='warrantyResultBase']/div/div[1]/div[1]/div[5]/div[2]")
         if not bool(enddate.text):
             # Extended Warranty End Date
             enddate = driver.find_element_by_xpath(
-                "//*[@id='additionalExtWarranty_1']/div/div/div[1]/div[5]/div[2]") 
-        
+                "//*[@id='additionalExtWarranty_1']/div/div/div[1]/div[5]/div[2]")
+
         enddate = enddate.text
     except:
         enddate ='error'
-    
+
     devicewarranty = [serialnumber,startdate,enddate]
     print(devicewarranty)
     warranty.append(devicewarranty)
-    
+
 warrantydf = DataFrame(warranty,columns=['Serial_Number','startdate','enddate'])
 
 # outout warranty date file
 warrantydf.to_csv(r"{}\warranty.csv".format(path),index=False)
-    
+
 driver.close()
